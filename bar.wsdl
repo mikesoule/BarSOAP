@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wss="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+    <wsdl:types>
+        <xs:schema>
+            
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <xs:element name="Security" type="xs:Security"/>
+            <xs:complexType name="Security">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="UsernameToken" type="xs:UsernameToken"/>
+                </xs:sequence>
+                <xs:attribute name="mustUnderstand" type="xs:string"/>
+                <xs:anyAttribute/>
+            </xs:complexType>
+            <xs:complexType name="UsernameToken">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Username" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:Password"/>
+                </xs:sequence>
+                <xs:attribute name="Id" type="xs:string"/>
+            </xs:complexType>
+            <xs:complexType name="Password">
+                <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                        <xs:attribute name="Type" type="xs:string"/>
+                    </xs:extension>
+                </xs:simpleContent>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="GetMenuRequest"/>
+    <wsdl:message name="GetMenuResponse">
+        <wsdl:part name="MenuRS" element="MenuRS"/>
+    </wsdl:message>
+    <wsdl:message name="GetDrinkRequest">
+        <wsdl:part name="GetDrinkRQ" element="GetDrinkRQ"/>
+    </wsdl:message>
+    <wsdl:message name="GetDrinkResponse">
+        <wsdl:part name="GetDrinkRS" element="GetDrinkRS"/>
+    </wsdl:message>
+    <wsdl:portType name="BarPortType">
+        <wsdl:operation name="GetMenu">
+            <wsdl:input name="GetMenuRequest"/>
+            <wsdl:output name="GetMenuResponse" message="GetMenuRS"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetDrink">
+            <wsdl:input name="GetDrinkRequest" message="GetDrinkRQ"/>
+            <wsdl:output name="GetDrinkResponse" message="GetDrinkRQ"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BarSoapBinding" type="BarPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetMenu">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="GetMenuRequest">
+                <soap:body use="literal"/>
+                <soap:header message="Security" part="Security" use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetMenuResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetDrink">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="GetDrinkRequest">
+                <soap:body use="literal"/>
+                <soap:header message="Security" part="Security" use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetDrinkResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="EZYieldHTNGService">
+        <wsdl:port name="EZYieldHTNGPort" binding="tns:EZYieldHTNGSoapBinding">
+            <soap:address location="http://barservice.dev"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
