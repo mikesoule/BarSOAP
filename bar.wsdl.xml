@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema"  xmlns:tns="http://barsoap.dev" targetNamespace="http://barsoap.dev">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://barsoap.dev">
+            <xs:element name="GetMenuRS">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Drinks" maxOccurs="unbounded" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Auth">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Username" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="Password" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="Auth">
+        <wsdl:part name="Auth" element="tns:Auth"/>
+    </wsdl:message>
+    <wsdl:message name="GetMenuRequest"/>
+    <wsdl:message name="GetMenuResponse">
+        <wsdl:part name="GetMenuRS" element="tns:GetMenuRS"/>
+    </wsdl:message>
+    <wsdl:message name="GetDrinkRequest">
+        <wsdl:part name="Age" type="xs:integer"/>
+    </wsdl:message>
+    <wsdl:message name="GetDrinkResponse">
+        <wsdl:part name="GetDrinkRS" type="xs:string"/>
+    </wsdl:message>
+    <wsdl:portType name="BarPortType">
+        <wsdl:operation name="GetMenu">
+            <wsdl:input message="GetMenuRequest"/>
+            <wsdl:output message="GetMenuResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetDrink">
+            <wsdl:input message="GetDrinkRequest"/>
+            <wsdl:output message="GetDrinkResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BarSoapBinding" type="BarPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetMenu">
+            <soap:operation soapAction="http://barsoap.dev/GetMenu" style="document"/>
+            <wsdl:input name="GetMenuRequest">
+                <soap:body use="literal"/>
+                <soap:header message="Auth" part="Auth" use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetMenuResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetDrink">
+            <soap:operation soapAction="http://barsoap.dev/GetDrink" style="document"/>
+            <wsdl:input name="GetDrinkRequest">
+                <soap:body use="literal"/>
+                <soap:header message="Auth" part="Auth" use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetDrinkResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BarSoapService">
+        <wsdl:port name="BarSoapPort" binding="tns:BarSoapBinding">
+            <soap:address location="http://barsoap.dev"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

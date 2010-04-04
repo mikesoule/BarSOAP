@@ -1,16 +1,23 @@
 <?php
 class Bar
 {
+    /**
+     * Authentication status
+     *
+     * @var boolean
+     **/
+    protected $_isAuthenticated = false;
     
     /**
      * Authentication method for handling the Security SOAP header (per WS-Security)
      *
+     * @param   object $auth
      * @return  void
      */
-    public function security(stdClass $wssSecurity)
+    public function auth(stdClass $auth)
     {
-        if ($wssSecurity->UsernameToken->Username != 'testuser' || $wssSecurity->UsernameToken->Password != 'testpass') {
-            throw new SoapFault('Sender', 'Invalid authentication credentials.');
+        if ($auth->Username == 'testuser' && $auth->Password == 'testpass') {
+            $this->_isAuthenticated = true;
         }
     }
     
@@ -21,8 +28,10 @@ class Bar
      **/
     public function getMenu()
     {
+        $this->_checkAuth();
+        
         $menu = new stdClass();
-        $menu->drinks = array('BEER!', 'Shirley Temple');
+        $menu->Drinks = array('BEER!', 'Shirley Temple');
         return $menu;
     }
     
@@ -34,7 +43,32 @@ class Bar
      **/
     public function getDrink($age)
     {
+        $this->_checkAuth();
+        
         return $age >= 21 ? 'BEER!' : 'Shirley Temple';
+    }
+    
+    /**
+     * undocumented function
+     *
+     * @return  void
+     **/
+    public function isAuthenticated()
+    {
+        return $this->_isAuthenticated;
+    }
+    
+    /**
+     * Secure the service from unauthorized requests
+     *
+     * @throws SoapFault
+     * @return  void
+     **/
+    private function _checkAuth()
+    {
+        if ($this->_isAuthenticated == false) {
+            throw new SoapFault('Sender', 'Invalid authentication credentials.');
+        }
     }
     
 }

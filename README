@@ -1,0 +1,9 @@
+A simple presentation on SOAP web services with PHP.
+
+Concepts include:
+• WSDL
+• SOAP Header authentication
+• Unit Testing (without making HTTP requests)
+
+Feel free to improve on this presentation and make it your own.
+Let us know if we can improve on the presentation and simplify the concepts even more!
